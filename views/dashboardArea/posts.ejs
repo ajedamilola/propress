@@ -1,0 +1,73 @@
+<%- include("header")  %> 
+    <div class="headings bottom-border display-3 compose-toggle">
+        Compose New <span class="dropdown-toggle"></span>
+    </div>
+    <div class="site-settings container compose bottom-border" style="display: none">
+        <form action="/newPost" method="post">
+            <h3>New</h3>
+            <input type="text" name="title" id="title" class="form-control field" placeholder="input Post Title">
+            <textarea name="content" id="postC" cols="30" rows="10" placeholder="post contents : NO HTML Support" class="form-control field"></textarea>
+            <input type="text" name="link" id="slug" class="form-control field" placeholder="Input Url Friendly Slug">
+            <label for="cats" class="field">Choose Category</label>
+            <select name="category" id="cats" class="form-control" placeholder="Input Category">
+                <option value="">None</option>
+                <option value="Uncategorized">Uncategorized</option>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category.Name %>"><%= category.Name %></option>
+                <% }) %>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-outline-dark" style="float: right;"><span class="badge badge-dark">&plus;</span> Create</button>
+        </form>
+    </div>
+    <br>
+    <div class="headings bottom-border display-3">
+        Existing Posts
+    </div>
+    
+    <div class="site-settings container bottom-border" >
+        <table class="table table-light table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Link</th>
+                    <th>Category</th>
+                    <th>Likes</th>
+                </tr>
+            </thead>
+            <tbody>
+                 <% posts.forEach(post => { %>
+                    <tr>
+                        <td><%= post.Title %></td>
+                        <td><%= post.Slug %></td>
+                        <td><%= post.Category %></td>
+                        <td>
+                            <%= post.Thumbs %>
+                            <form action="/admin/postEditor" method="post">
+                                <input type="hidden" name="id" value="<%= post.id %>">
+                                <button type="submit" class="btn btn-outline-info btn-sm">Edit</button>
+                            </form>
+                            <form action="/delete" method="post">
+                                <input type="hidden" name="id" value="<%= post.id %>">
+                                <input type="hidden" name="type" value="post">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete Post</button>
+                            </form>
+                        </td>
+                    </tr>
+                 <% }) %>
+                
+            </tbody>
+        </table>
+    </div>
+<script>
+    $(".compose-toggle").click(function(){
+        $(".compose").slideToggle("fast");
+    });
+    var bannedUrlArray=["/"," ","=","\\","\"","\'","{","}","[","]",";",":"];
+    var checkSlug=setInterval(function(){
+        bannedUrlArray.forEach(text => {
+            var d=document.getElementById("slug").value=document.getElementById("slug").value.replace(text,"-");   
+        });
+    },200);
+</script>
+<%- include("footer")  %> 

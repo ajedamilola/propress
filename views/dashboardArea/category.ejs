@@ -1,0 +1,56 @@
+<%- include("header")  %> 
+    <div class="headings bottom-border display-3 compose-toggle">
+        Create New <span class="dropdown-toggle"></span>
+    </div>
+    <div class="site-settings container compose bottom-border" style="display: none">
+        <form action="/newCategory" method="post">
+            <h3>New</h3>
+            <input type="text" name="title" id="title" class="form-control field" placeholder="input Category Name">
+            <input type="text" name="link" id="slug" class="form-control field" placeholder="Input Url Friendly Slug">
+            <br>
+            <button type="submit" class="btn btn-outline-dark" style="float: right;"><span class="badge badge-dark">&plus;</span> Create</button>
+        </form>
+    </div>
+    <br>
+    <div class="headings bottom-border display-3">
+        Existing Categories
+    </div>
+    
+    <div class="site-settings container bottom-border" >
+        <table class="table table-light table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                 <% categories.forEach(category => { %>
+                    <tr>
+                        <td><%= category.Name %></td>
+                        <td><%= category.Slug %></td>
+                        <td>
+                            <form action="/delete" method="post">
+                                <input type="hidden" name="id" value="<%= category.id %>">
+                                <input type="hidden" name="type" value="category">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete Category</button>
+                            </form>
+                        </td>
+                    </tr>
+                 <% }) %>
+                
+            </tbody>
+        </table>
+    </div>
+<script>
+    $(".compose-toggle").click(function(){
+        $(".compose").slideToggle("fast");
+    });
+    var bannedUrlArray=["/"," ","=","\\","\"","\'","{","}","[","]",";",":"];
+    var checkSlug=setInterval(function(){
+        bannedUrlArray.forEach(text => {
+            var d=document.getElementById("slug").value=document.getElementById("slug").value.replace(text,"-");   
+        });
+    },200);
+</script>
+<%- include("footer")  %> 

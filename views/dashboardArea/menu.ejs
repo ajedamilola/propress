@@ -1,0 +1,212 @@
+<%- include("header")  %> 
+    <div class="headings bottom-border display-3 compose-toggle">
+        Create New MenuItem <span class="dropdown-toggle"></span>
+    </div>
+    <div class="site-settings container compose bottom-border" style="display: none">
+        <form action="/newMenuItem" method="post">
+            <h3>Item</h3>
+            <input type="text" name="name" id="name" class="form-control field" placeholder="Input Link Text" required>
+            <select name="type" id="type" class="form-control field"  required>
+                <option value="">
+                    Select Menu Type
+                </option>
+                <option value="category">
+                    Category
+                </option>
+                <option value="Page">
+                    Page/Post
+                </option>
+                <option value="Static Link">
+                    Static Link
+                </option>
+            </select>
+
+            <select type="text" name="link" id="categories" class="field form-control"  >
+                <option value="">Select Category</option>
+                <% categories.forEach(category => { %>
+                    <option value="<%= category.Slug %> "><%= category.Name %></option>
+                <% }) %>
+
+            </select>
+            <select type="text" name="link" id="page" class="field form-control" >
+                <option value="">Select Page</option>
+                <% posts.forEach(page => { %>
+                    <option value="<%= page.Slug %> "><%= page.Title %> </option>
+                <% }) %>
+                
+            </select>
+            <input type="url" name="link" class="form-control field"  placeholder="Input URL" id="staticlink" >
+            <input type="hidden" name="index" value="">
+
+            
+            
+            
+            <br>
+            <button type="submit" class="btn btn-outline-dark" style="float: right;"><span class="badge badge-dark">&plus;</span> Create</button>
+        </form>
+    </div>
+
+    <br>
+    <div class="headings bottom-border display-3">
+        Existing Menu Items
+    </div>
+    
+    <div class="site-settings container bottom-border" >
+        <table class="table table-light table-striped table-hover">
+            <thead>
+                <tr>
+                    <th colspan="5" style="text-align: center;">
+                        Note:The LINK Property Will Be REMOVED if You Add a CHILD OBJECT to a MENUITEM
+                    </th>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Link</th>
+                    <th>Type</th>
+                    <th>Parent</th>
+                    <th>Children</th>
+                </tr>
+            </thead>
+            <tbody>
+                 <% menuItems.forEach(menu => { %>
+                    <%# Show On main List if You Are Not A Child Object %> 
+                        <% if (menu.isChild==false) { %>
+                            <tr>
+                            <td><b><%= menu.Text %></b></td>
+                        <td><b><%= menu.Link %></b></td>
+                        <td><b><%= menu.Type %></b></td>
+                        <td>
+                            <form action="/delete" method="post">
+                            <input type="hidden" name="id" value="<%= menu.id %>">
+                            <input type="hidden" name="type" value="menu">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete Item</button>
+                        </form></td>
+                        <td>
+                           
+                            <form action="/setMenuChild" method="post">
+                                <input type="hidden" name="parent" value="<%= menu.id %>">
+                                <select name="child" id="" class="form-control" onchange="this.form.submit()">
+                                <option value="">Add Menu Child</option>
+                               
+                                <% menuItems.forEach(subItem => { %>
+                                    <% var childBefore=false %> 
+                                    <% for( let inf = 0; inf < menu.Children.length; inf++ ) { %>
+                                        <% if(menu.Children[inf]==subItem.Text){ %>
+                                        <% childBefore=true; break; } %> 
+                                    <% } %>
+                                    <% if(subItem.id!=menu.id && childBefore==false){ %> 
+                                        <option value="<%= subItem.Text %>"><%= subItem.Text %></option>
+                                    <% } %> 
+                                <% }); %> 
+                                </select>
+                            </form>
+                           
+                            
+                        </td>
+                        <% menu.Children.forEach(childs => { %>
+                            <tr style="text-align: right !important;">
+                               <% menuItems.forEach(men => { %>
+                                    <% if(men.Text==childs){ %>
+                                        
+                                        <td><%= men.Text %>  </td>
+                                        <td><%= men.Link %>  </td>
+                                        <td><%= men.Type %> </td>
+                                        <td>
+                                            <form action="/removeMenuChild" method="post">
+                                                <input type="hidden" value="<%= men.id %>" name="menuid" >
+                                                <input type="hidden" value="<%= menu.id %>" name="parentId">
+                                                <input type="hidden" value="<%= men.Text %>" name="texty">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove Child</button>
+                                            </form>
+                                        </td>
+                                        <th>
+                                            
+                                        </th>
+                                    <% } %> 
+                               <% }) %>
+                               
+                            </tr>
+                        <% }) %>
+                       
+                    </tr>
+                        <% } %>
+                        
+                 <% }) %>
+                
+            </tbody>
+        </table>
+    </div>
+<script>
+    $(".compose-toggle").click(function(){
+        $(".compose").slideToggle("fast");
+    });
+    var checkSelectedObject=setInterval(function(){
+        var t=document.getElementById("type");
+        switch (t.value) {
+            case "":
+                $("#categories").fadeOut("fast");
+                $("#page").fadeOut("fast");
+                $("#staticlink").fadeOut("fast");
+
+                document.getElementById("categories").required=false;
+                document.getElementById("page").required=false;
+                document.getElementById("staticlink").required=false;
+
+                document.getElementById("categories").name="false";
+                document.getElementById("page").name="false";
+                document.getElementById("staticlink").name="false";
+
+                document.getElementsByName("index")[0].value="";
+                break;
+            case "category":
+                $("#categories").fadeIn("fast");
+                $("#page").fadeOut("fast");
+                $("#staticlink").fadeOut("fast");
+
+                document.getElementById("categories").required=true;
+                document.getElementById("page").required=false;
+                document.getElementById("staticlink").required=false;
+
+                document.getElementById("categories").name="link";
+                document.getElementById("page").name="false";
+                document.getElementById("staticlink").name="false";
+
+
+                document.getElementsByName("index")[0].value="1";
+                break;
+            case "Page":
+                $("#categories").fadeOut("fast");
+                $("#page").fadeIn("fast");
+                $("#staticlink").fadeOut("fast");
+
+                document.getElementById("categories").required=false;
+                document.getElementById("page").required=true;
+                document.getElementById("staticlink").required=false;
+
+                document.getElementById("categories").name="false";
+                document.getElementById("page").name="link";
+                document.getElementById("staticlink").name="false";
+
+                document.getElementsByName("index")[0].value="2";
+                break;
+            case "Static Link":
+                $("#categories").fadeOut("fast");
+                $("#page").fadeOut("fast");
+                $("#staticlink").fadeIn("fast");
+
+                document.getElementById("categories").required=false;
+                document.getElementById("page").required=false;
+                document.getElementById("staticlink").required=true;
+
+                document.getElementById("categories").name="false";
+                document.getElementById("page").name="false";
+                document.getElementById("staticlink").name="link";
+
+                document.getElementsByName("index")[0].value="3";
+                break;
+        }
+
+
+    },200);
+</script>
+<%- include("footer")  %> 

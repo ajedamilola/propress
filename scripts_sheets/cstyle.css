@@ -1,0 +1,117 @@
+.navbar-left{
+    width:10% !important;
+    min-height: 100% !important;
+    position: fixed !important;
+    border : 1px solid grey;
+    align-content: flex-start !important;
+}
+.navbar-left .navbar-nav{
+    padding-top: 20% !important;
+}
+.navbar-left .navbar-nav .nav-item{
+    margin-top: 50%;
+}
+.admin-content{
+    margin-left: 10% !important;
+    padding-top: 70px !important;
+}
+.headings{
+    font-size: 40px !important;
+}
+.sub-heading{
+    font-size: 30px !important;
+
+}
+.bottom-border{
+    padding-bottom: 5px !important;
+    border-bottom: 1px solid darkgray;
+}
+.site-settings{
+    margin-left: 7.5%;
+    margin-bottom: 5%;
+}
+.default-modal{
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(169, 169, 169, 0.651);
+    position: fixed;
+    display: inline;
+}
+.modal-box{
+    width: 40% !important;
+    margin-top: 10% !important;
+    height: 30%;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 1px 2px 4px rgb(80, 80, 80);
+    border-radius: 20px;
+}
+.modal-box-header{
+    width: 105% !important;
+    height: 30px;
+    display: flex;
+    border-radius: 20px;
+    margin-left:-2.5% !important ;
+    margin-top: 15% !important;
+    align-items: center;
+    justify-content: space-between;
+    align-content: space-between;
+    color: white;
+}
+.cancel-button{
+    margin: 5px;
+    padding: 0px 3px;
+    border: 1px solid white;
+    margin-right: 10px !important;
+    font-size: 20px;
+}
+.cancel-button:hover{
+    transition-duration: 200ms;
+    cursor: pointer;
+    background-color: white;
+    color: rgb(33, 36, 39);
+}
+.cancel-button:focus{
+    outline: 1px solid gray;
+}
+.modal-header-text{
+    margin-left: 10%;
+}
+.shown{
+    display: inline !important;
+}
+.modal-textbox{
+    width:70% !important;
+    display: inline !important;
+}
+.push-down{
+    margin-top: 10% !important;
+    margin-left: 10% !important;
+}
+.compose{
+    width:70% !important;
+    border: 1px solid rgb(226, 226, 226);
+    padding:40px;
+    border-radius: 20px;
+}
+.field{
+    margin-top: 20px !important;
+}
+.form-control{
+    background-color: rgba(255, 255, 255, 0.556) !important;
+}
+.no-decoration{
+    color: black !important;
+}
+.no-decoration:focus,.no-decoration:hover{
+    transition-duration: 100ms ea;
+    outline: 2px solid darkcyan;
+}
+.software-declaration{
+    position: fixed;
+    font-size: 15px !important;
+    top:1% !important;
+    left:3% !important;
+}
+.software-declaration .sub-heading{
+    font-size: 20px !important;
+}

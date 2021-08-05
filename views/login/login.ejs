@@ -1,0 +1,29 @@
+<%- include ("header"); %> 
+
+    <div class="main-content container">
+        <% if(error=="user"){ %> 
+            <div class="alert alert-faded alert-danger">
+                No such Account with This Username
+            </div>
+        <% } %> 
+        <% if(error=="pass"){ %> 
+        <div class="alert alert-faded alert-warning">
+            Wrong Password
+        </div>
+        <% } %> 
+        <form action="/login" method="post" id="login">
+            <span class="display-4" style="float: left !important;margin-bottom: 50px !important;">
+                Account Login
+            </span>
+            <br>
+            <input type="email" name="username" id="useremail" class="form-control  field" placeholder="Input Email Registered with this account" required>
+            <input type="password" name="password" id="" class="form-control ml-up field" placeholder="Input Password" required>
+            <input type="checkbox" name="check" id="check_login" required class="ml-up"><label for="check_logn">
+                By clicking This Checkbox you Agree to Our Liscence agreement
+            </label>
+            <br>
+            <button type="submit" class="btn btn-outline-main ml-up">LOGIN</button>
+        </form>
+    </div>
+    
+<%- include ("footer"); %> 

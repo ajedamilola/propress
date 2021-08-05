@@ -1,0 +1,57 @@
+.navbar-main{
+    background-image: linear-gradient(30deg,rgba(238, 238, 238, 0.836) 50%,rgb(206, 206, 206) 50%) !important;
+}
+.nav-link{
+    font-weight: 500;
+    font-size: 19px;
+}
+.nav-item{
+    padding:4px 10px;
+}
+.ml-up{
+    margin-top: 30px !important;
+}
+.main-content{
+    padding-top: 8%;
+    text-align: center;
+    min-height: 800px;
+    min-width: 100% !important;
+}
+body.gradient-faded .main-content{
+    padding-top: 8%;
+    text-align: center;
+    background-image: linear-gradient(-50deg,rgba(255, 255, 255, 0.836) 50%,rgb(226, 226, 226) 50%);
+}
+#login{
+    margin-left: 25%;
+    width: 45%;
+}
+.btn-outline-main{
+    background-color: transparent;
+    color: darkgray;
+    border: 1px solid darkgray !important;
+    float: right !important;
+    font-size: 20px !important;
+}
+.btn-outline-main:focus{
+    background-color: darkgray;
+    color: white;
+    border: 1px solid darkgray !important;
+}
+.btn-outline-main:hover{
+    transition-duration: 200ms;
+    background-color: darkgray;
+    color: white;
+    border: 1px solid darkgray !important;
+}
+.field{
+    font-size: 19px !important;
+    padding-left: 20px !important;
+}
+@media (max-width:900px){
+    #login{
+        margin-left: 10% !important;
+        width: 80% !important;
+        margin-top: 20%;
+    }
+}

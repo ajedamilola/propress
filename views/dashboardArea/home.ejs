@@ -1,0 +1,161 @@
+<%- include ("header"); %> 
+
+    <span style="float: right; font-size: large !important;" class="display-3"><%= userName %><br><%= userEmail %></span>
+    <br>
+    <h1 class="display-3 headings bottom-border">
+        Basic Settings
+    </h1>
+    <br>
+    <div class="site-settings">
+        <h4 class="display-3 sub-heading">BLog Name : <%= userName %>  <button class="btn btn-dark bname-trigger" >Change</button></h4>
+        <br>
+        <!--Next Item-->
+        <h4 class="display-3 sub-heading">Slug : 
+            <a class="card-link" href="/<%= slug %>" target="_blank">/<%= slug %> </a>
+            <button class="btn btn-dark blink-trigger" >Change</button></h4>
+        <br>
+        <!--Next Item-->
+        <h4 class="display-3 sub-heading">Navigation Color :
+            <input type="color" name="" id="" value="<%= theme %>" readonly disabled>
+             
+            <button class="btn btn-dark btheme-trigger" >Change</button></h4>
+        <br>
+        <!--Next Item-->
+        <h4 class="display-3 sub-heading">Navigation Link Color : <input type="color" name="" id="" value="<%= shade %>" disabled> <button class="btn btn-dark bshade-trigger" >Change</button></h4>
+        <br>
+    </div>
+    <!--Modal for changing blog name-->
+    <div class="modal bname">
+        <div class="default-modal">
+            
+            <div class="modal-box container"> 
+                <div class="modal-box-header bg-dark">
+                    <span class="modal-header-text">
+                        Change Blog Site Name
+                    </span> 
+                    <span style="float: left;" class="cancel-button bname-trigger">
+                        &times;
+                    </span>
+                </div> 
+                <form action="/changeBlogSettings" method="post" class="push-down">
+                    <input type="text" name="value" id="" required placeholder="input new Blog Site Name" class="form-control modal-textbox">
+                    <button class="btn btn-outline-dark" type="submit" style="display: inline;">Change</button>
+                    <input type="hidden" name="type" value="b_name">
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal for changing blog name-->
+    <div class="modal blink">
+        <div class="default-modal">
+            
+            <div class="modal-box container"> 
+                <div class="modal-box-header bg-dark">
+                    <span class="modal-header-text">
+                        Change Blog Adress
+                    </span> 
+                    <span style="float: left;" class="cancel-button blink-trigger">
+                        &times;
+                    </span>
+                </div> 
+                <form action="/changeBlogSettings" method="post" class="push-down">
+                    <input type="text" name="value" id="" required placeholder="input new Blog adress" value="<%= slug %>" class="form-control modal-textbox" >
+                    <button class="btn btn-outline-dark" type="submit" style="display: inline;">Change</button>
+                    <input type="hidden" name="type" value="b_link">
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal for changing blog name-->
+    <div class="modal btheme">
+        <div class="default-modal">
+            
+            <div class="modal-box container"> 
+                <div class="modal-box-header bg-dark">
+                    <span class="modal-header-text">
+                        Change Blog Site Navigation Colour
+                    </span> 
+                    <span style="float: left;" class="cancel-button btheme-trigger">
+                        &times;
+                    </span>
+                </div> 
+                <form action="/changeBlogSettings" method="post" class="push-down">
+                    <label for="colorp">CLick to choose color</label>
+                    <input type="color" name="value" id="colorp" required placeholder="input new Blog Site Name"
+                         class="form-control modal-textbox" style="height: 30px !important;" value="<%= theme %>">
+
+                    <button class="btn btn-outline-dark" type="submit" style="display: inline;">Change</button>
+                    <input type="hidden" name="type" value="b_theme">
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal for changing blog name-->
+    <div class="modal bshade">
+        <div class="default-modal">
+            
+            <div class="modal-box container"> 
+                <div class="modal-box-header bg-dark">
+                    <span class="modal-header-text">
+                        Change Navigation Text Color
+                    </span> 
+                    <span style="float: left;" class="cancel-button bshade-trigger">
+                        &times;
+                    </span>
+                </div> 
+                <form action="/changeBlogSettings" method="post" class="push-down">
+                    <label for="mec">Click to change color</label><br>
+                    <input type="color" name="value" id="mec" value="<%= shade %>" class="form-control modal-textbox"
+                        style="height: 30px !important;">
+                    <button class="btn btn-outline-dark" type="submit" style="display: inline;">Change</button>
+                    <input type="hidden" name="type" value="b_shade">
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(".bname-trigger").click(function(){
+            $(".bname").fadeToggle("fast");
+        });
+        $(".blink-trigger").click(function(){
+            $(".blink").fadeToggle("fast");
+        });
+        $(".btheme-trigger").click(function(){
+            $(".btheme").fadeToggle("fast");
+        });
+        $(".bshade-trigger").click(function(){
+            $(".bshade").fadeToggle("fast");
+        });
+    </script>
+    <!--Thats all for Basic Setings and it's modal-->
+    <h1 class="display-3 headings bottom-border">
+        Template Setting
+    </h1>
+    <div class="site-settings">
+        <h4 class="display-3 sub-heading">Current Template:<br>
+            <div class="site-settings">
+                <div class="row" style="margin-top: 30px !important;">
+                    <div class="col-6">
+                        <b><i><%= template %> </i> </b> 
+                    </div>
+                    <div class="col-6">
+                        image here
+                    </div>
+                </div> 
+                <div class="row " style="margin-top: 30px !important;">
+                    <div class="col-12">
+                        <button class="btn btn-outline-dark">More Template Layouts</button>
+                    </div>
+                </div>            
+                  
+            </div>
+    </div>
+    
+<%- include ("footer"); %> 

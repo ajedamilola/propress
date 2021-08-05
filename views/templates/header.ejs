@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/cssjs/blog-style.css">
+    <link rel="stylesheet" href="/cssjs/bootstrap.css">
+    <script src="/cssjs/bootstrap.js"></script>
+    <script src="/cssjs/jquery.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand nav-back">
+        <ul class="navbar-nav ml-auto">
+            <li class="navbar-item">
+                <a href="#" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link dropdown-toggle" id="dropdown-trigger" tag="categories">Categories</a>
+                <div class="dropdown-menu nav-back" id="dropdown-menu">
+                    <% for( let i = 0; i < blogCategories.length; i++ ) { %>
+                        <div class="dropdown-item">
+                            <a href="/category/<%- blogCategories[i].Slug %>" class="dropdown-link"> <%- blogCategories[i].Name %></a>
+                        </div>
+                    <% } %>
+                </div>
+            </li>
+            <li class="navbar-item">
+                <a href="#" class="nav-link">New Blogs</a>
+            </li>
+        </ul>
+    </nav>

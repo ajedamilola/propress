@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/cssjs/blog-style.css">
+    <link rel="stylesheet" href="/cssjs/bootstrap.css">
+    <script src="/cssjs/bootstrap.js"></script>
+    <script src="/cssjs/jquery.js"></script>
+    <style>
+        .nav-back,
+        .dropdown-menu {
+            background-image: linear-gradient(65deg, <%=theme %> 50%, rgb(236, 236, 236) 50%);
+        }
+        .nav-link{
+            color: <%= shade%> !important;
+        }
+
+        .multiple-categories{
+            margin: 10% 2%;
+        }
+        a[tag="categories"]+.dropdown-menu {
+            margin-left: 82% !important;
+        }
+
+        .dropdown-link {
+            color: white;
+            text-shadow: 1px 2px 2px gray;
+        }
+
+        .dropdown-item:hover .dropdown-link {
+            transition-duration: 0.5s;
+            color: rgb(53, 53, 53);
+            text-decoration: none;
+        }
+
+        .blog-post {
+            min-width: 100% !important;
+        }
+
+        .blog-post .col.border-right {
+            padding: 0px 30px !important;
+            margin-bottom: 10%;
+            border-right: 1px solid darkgray !important;
+        }
+
+        .col[tag="blog-image-container"] {
+            max-height: 100px !important;
+            border: 0px !important;
+        }
+
+        .single-blog-post-text {
+            font-size: 22px !important;
+            color: rgba(22, 22, 22, 0.705);
+            line-height: 34px !important;
+        }
+
+        .single-blog-post-text-sm {
+            font-size: 17px !important;
+            color: rgba(22, 22, 22, 0.705);
+            line-height: 34px !important;
+        }
+
+        .single-blog-post {
+            text-align: justify;
+            display: block !important;
+            margin-bottom: 10%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        cite {
+            display: inline !important;
+            margin-top: 20px !important;
+        }
+
+        .suggestion {
+            display: block;
+            color: rgb(83, 83, 83) !important;
+        }
+
+        article[tag="multile-articles"] a {
+            color: rgb(59, 59, 59) !important;
+
+        }
+
+        a:hover {
+            text-decoration: none !important;
+        }
+
+        .post-title {
+            font-size: x-large !important;
+        }
+
+        .post-title-lg {
+            font-size: 45px !important;
+        }
+
+        article[tag="multile-articles"] .col img.blog-image {
+            width: 100px !important;
+            height: 100px !important;
+        }
+
+        .top-row-home-article {
+            align-items: center;
+        }
+
+        p[tag="post-content"] {
+            margin-top: 20px;
+        }
+
+        .blog-header-sm{
+            font-size: 45px !important;
+        }
+
+
+        @media (max-width:1000px) {
+            .blog-post .col {
+                padding-bottom: 10px !important;
+                border-bottom: 1px solid gray;
+            }
+
+            .post-title {
+                font-size: 25px !important;
+            }
+
+            article[tag="multile-articles"] .col img.blog-image {
+                width: 90px !important;
+                height: 90px !important;
+            }
+
+            body {
+                background-image: linear-gradient(288deg, #e8e8e8c7 50%, white 50%) !important;
+                min-height: 100% !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand nav-back">
+        <ul class="navbar-nav ml-auto">
+            <li class="navbar-item">
+                <a href="/<%= Parent %>" class="nav-link">Home</a>
+            </li>
+            <% var webpage="https://propress.herokuapp.com" %>
+            <% menu.forEach(item => { %>
+            <% if (item.isChild==false) { %>
+            <% let isDropDown=false; %>
+            <% if(item.Children.length>0){ %>
+            <% isDropDown=true %>
+            <%  } %>
+            <%# if current Item is a dropdown Furhter looping must occur %>
+            <% if (isDropDown==true) { %>
+            <li class="nav-item dropdown">
+                <% if (item.type=="Static Link") { %>
+                <a href="/#" class="nav-link dropdown-toggle " id="<%= item.id %>btn"><%= item.Text %></a>
+                <div class="dropdown-menu">
+
+                    <% item.Children.forEach(sub => { %>
+                    <% menu.forEach(subi => { %>
+                    <% if (subi.Text==sub) { %>
+                    <% if (subi.Type=="Static Link") { %>
+                    <div class="dropdown-item"><a class="dropdown-link" href="<%= webpage %>/<%= subi.Link %>">
+                            <%= sub %> </a> </div>
+                    <% } %>
+                    <div class="dropdown-item"><a class="dropdown-link" href="<%= webpage %>/<%= subi.Link %>">
+                            <%= sub %> </a> </div>
+                    <% } %>
+                    <% }) %>
+                    <% }) %>
+                </div>
+                <script>
+                    $("#<%= item.id %>btn").click(function () {
+                        $("#<%= item.id %>slid").slideToggle("fast");
+                    })
+                </script>
+                <% }else{ %>
+                <a href="#" class="nav-link dropdown-toggle" id="<%= item.id %>btn"><%= item.Text %></a>
+                <div class="dropdown-menu" id="<%= item.id %>slide">
+
+                    <% item.Children.forEach(sub => { %>
+                    <% menu.forEach(subi => { %>
+                    <% if (subi.Text==sub) { %>
+                        <% if (sub.Type=="Static Link") { %>
+                            <div class="dropdown-item"><a class="dropdown-link" href="<%= subi.Link %>">
+                                <%= sub %> </a> </div>
+                        <% }else{ %>
+                    <div class="dropdown-item"><a class="dropdown-link" href="<%= webpage %>/<%= subi.Link %>">
+                            <%= sub %> </a> </div>
+                        <% } %> 
+                    <% } %>
+                    <% }) %>
+                    <% }) %>
+                </div>
+                <script>
+                    $("#<%= item.id %>btn").click(function () {
+                        $("#<%= item.id %>slide").slideToggle("fast");
+                    })
+                </script>
+                <% } %>
+            </li>
+            <% }else{ %>
+            <li class="navbar-item">
+                <% if (item.type=="Static Link") { %>
+                <a href="<%= item.Link %>" class="nav-link"><%= item.Text;%></a>
+                <% }else{ %>
+                <a href="<%= item.Link %>" class="nav-link"><%= item.Text %></a>
+                <% } %>
+            </li>
+            <% } %>
+
+            <% } }) %>
+
+
+        </ul>
+    </nav>
+    <% if (page=="home") { %>
+    <title><%= Title %> </title>
+    <h3 class="display-4 jumbotron text-center">
+        Blog Articles
+    </h3>
+    <div class="page-contents container">
+        <br>
+        <% var maxBlogContent=4; %>
+        <div class="row blog-post">
+
+            <% let i=0; %>
+            <%posts.forEach(post => { %>
+            <% i++ %>
+            <% if (i<=maxBlogContent) { %>
+            <div class="col col-lg-6 col-12 border-right">
+                <article tag="multile-articles">
+                    <!--title of Page row-->
+                    <div class="row top-row-home-article">
+                        <div class="col col-6 blog-header" tag="blog-image-container">
+                            <h1 class="post-title"><a href="/<%= Parent %>/<%= post.Slug %>"><%= post.Title %> </h1></a>
+                        </div>
+                        <div class="col col-6 blog-header" style="text-align: right !important;"
+                            tag="blog-image-container">
+                            <img src="postImages/<%= post.Slug %>.jpg" alt="post on <%= post.Title %>,<%= post.Title %>"
+                                class="image blog-image">
+                        </div><br>
+                    </div>
+                    <!--main blog article-->
+                    <p tag="post-content">
+                        <%= post.Contents.slice(0,100); %>....
+                    </p><a href="/<%= Parent %>/<%= post.Slug %>" style="font-size: small;">Read All</a><br>
+                    <cite style="float: left;"><%= post.Category; %></cite>
+                    <cite style="float: right;"><%= post.Author; %> </cite>
+                </article>
+            </div>
+            <% return; } %>
+
+            <%  }); %>
+
+        </div>
+
+    </div>
+    <!--For Viewing Of multiple Categories-->
+    <% categories.forEach(category => { %>
+    <div class="multiple-categories">
+        <h2 class="display-3 text-center blog-header-sm"><%= category.Name %> </h2>
+        <div class="container">
+            <div class="row">
+                <% var index=0 %> 
+                <% posts.forEach(post => { %>
+                <% if (post.Category==category.Name) { %>
+                    <% index++ %> 
+                <div class="col col-6 col-md-6 col-sm-12 border-right" style="margin-top: 50px !important;">
+                    <a href="<%= webpage %>/<%= Parent %>/<%= post.Slug %>">
+                        <h2 class="post-title display-3"><%= post.Title %></h2>
+                    </a>
+                    <br>
+                    <div class="" style="margin-left: 50px !important;">
+                        <span class="single-blog-post-text-sm">
+                            <%= post.Contents.slice(0,100) %>
+                        </span>
+                        <br>
+                        <a href="<%= webpage %>/<%= Parent %>/<%= post.Slug %>">See all</a>
+                    </div>
+                </div>
+                <% } %>
+                <% }) %>
+                <% if (index==0) { %>
+                    <div class="suggestion text-center" style="text-align: center !important;">No Posts Under This Category Yet</div>
+                <% } %>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <% }) %>
+
+
+    <% }else if(page=="a_blog"){ %>
+
+    <title>
+        <%= title %> - <%= post.Title %>
+    </title>
+    <h3 class="display-4 jumbotron text-center">
+        <%= post.Title %>
+    </h3>
+    <div class="container d-block">
+        <article class="single-blog-post" style="margin-left: 50px !important;">
+            <p class="single-blog-post-text"><%= post.Contents %> </p>
+
+            <cite style="float: right;">
+                Category: <%= post.Category %>
+            </cite>
+        </article>
+        <br>
+        <div class="suggestion">
+
+            <% categories.forEach(category => { %>
+            <% if (category.Name==post.Category) { %>
+            <a href="<%= webpage %>/<%= Parent %>/categories/<%= category.Slug %>">See more Post under this category</a>
+            <% } %>
+            <% }) %>
+        </div>
+    </div>
+    <% }else if (page=="a_blog_category") { %>
+
+    <title><%= title %></title>
+    <h3 class="display-4 jumbotron text-center">
+        <b><%= title %> </b>
+    </h3>
+    <div class="container">
+        <div class="row">
+            <% posts.forEach(post => { %>
+            <% if (post.Category==title) { %>
+            <div class="col col-6 col-md-6 col-sm-12 border-right">
+                <a href="<%= webpage %>/<%= Parent %>/<%= post.Slug %>">
+                    <h2 class="post-title-lg display-3"><%= post.Title %></h2>
+                </a>
+                <br>
+                <div class="" style="margin-left: 50px !important;">
+                    <span class="single-blog-post-text-sm">
+                        <%= post.Contents %>
+                    </span>
+                </div>
+            </div>
+            <% } %>
+            <% }) %>
+
+        </div>
+
+    </div>
+
+
+    <% }else { %>
+    <h3 class="display-4 jumbotron text-center">
+        <b>404</b>
+    </h3>
+    <div class="container d-block">
+        <center>
+            <p class="single-blog-post-text">
+                The Page you are looking for does not exists
+            </p>
+        </center>
+        <div class="suggestion">
+            <a href="/<%= Parent %>">Go back to home</a>
+        </div>
+
+
+    </div>
+
+    <% } %>
+    </section>
+</body>
+<script>
+    $("#dropdown-trigger").click(function () {
+        $("#dropdown-menu").slideToggle("fast");
+    });
+</script>
+
+</html>

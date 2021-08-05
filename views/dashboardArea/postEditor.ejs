@@ -1,0 +1,39 @@
+<%- include("header") %>
+<div class="software-declaration">
+     <h3 class="sub-heading display-3">
+        Post Editor 1.0
+    </h3>
+</div>
+   
+    <style>
+        nav {
+            display: none !important;
+        }
+    </style>
+    <div class="container compose" style="background-image: linear-gradient(65deg,rgb(225, 225, 225) 50%,white 50%);">
+        <button type="button" class="close d-inline" aria-label="Close" style="margin-top: 10px !important;">
+            <a href="/admin/post" class="nav-link no-decoration"><span aria-hidden="true">&times;</span></a>
+          </button>
+        <h2 class="headings display-3 d-inline">Edit Post</h2>
+        <br>
+        <form action="/editPost" method="post">
+            <label for="title" class="field">Post Title</label>
+            <input type="text" name="title" id="title" class="form-control" value="<%= title %>">
+            <input type="hidden" name="pid" value="<%= pId %>">
+            <label for="slug" class="field">Post Slug/Link</label>
+            <input type="text" name="slug" id="slug" class="form-control" value="<%= slug %>">
+            <textarea name="content" id="" cols="30" rows="10" class="field form-control" ><%= post %></textarea>
+            <select name="category" id="" class="form-control field">
+                    <% categories.forEach(cat => { %>
+                        <% if (cat.Name==category) { %>
+                            <option value="<%= cat.Name %>" selected><%= cat.Name %></option>
+                        <% }else{ %>
+                            <option value="<%= cat.Name %>"><%= cat.Name %></option>
+                        <% } %> 
+                    <% }) %>
+            </select>
+            <br>
+            <button type="submit" class="btn btn-outline-dark field">Update</button>
+        </form>
+    </div>
+<%- include("footer") %>
