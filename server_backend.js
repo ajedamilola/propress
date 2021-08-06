@@ -5,6 +5,7 @@ const app = express();
 const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const fs = require("fs");
 app.use(cookieParser());
 const port = process.env.PORT || 3000;
 app.listen(port, function () {
@@ -40,6 +41,10 @@ const menuSchema = {
     Children: [String],
     isChild: Boolean
 }
+const MediaSchema = {
+    Name: String,
+    Type: String
+}
 const accountsSchema = {
     Name: String,
     Password: String,
@@ -56,8 +61,8 @@ const accountsSchema = {
     PageLinkTextColor: String,
     CategoryHeaderColor: String,
     HomePageCaption: String,
-    GeneralLinkColor: String
-    
+    GeneralLinkColor: String,
+    Media: [MediaSchema]
 }
 
 const Account = mongoose.model("account", accountsSchema)
@@ -91,7 +96,7 @@ app.get("/cssjs/clientStyle.css", function (req, res) {
 app.get("/accountLogin", function (req, res) {
     res.render("login/login", {
         page: "accountLogin",
-		message:""
+        message: ""
     });
 
 });
@@ -122,16 +127,16 @@ app.get("/admin", function (req, res) {
                         template: result.Template,
                         bgc: result.BackroundColor,
                         pl: result.PageLinkTextColor,
-                        cl:result.CategoryHeaderColor,
-                        cp:result.HomePageCaption,
-                        gl:result.GeneralLinkColor
+                        cl: result.CategoryHeaderColor,
+                        cp: result.HomePageCaption,
+                        gl: result.GeneralLinkColor
                     });
                 } else {
                     //if no user with such id
                     res.render("login/login", {
                         page: "accountLogin",
                         error: "",
-                        message:""
+                        message: ""
                     });
                 }
             } else {
@@ -145,7 +150,7 @@ app.get("/admin", function (req, res) {
         res.render("login/login", {
             page: "accountLogin",
             error: "",
-            message:""
+            message: ""
         });
     }
 
@@ -183,7 +188,7 @@ app.get("/admin/post", function (req, res) {
                     res.render("login/login", {
                         page: "accountLogin",
                         error: "",
-                        message:""
+                        message: ""
                     });
                 }
             } else {
@@ -197,7 +202,7 @@ app.get("/admin/post", function (req, res) {
         res.render("login/login", {
             page: "accountLogin",
             error: "",
-            message:""
+            message: ""
         });
     }
 
@@ -237,7 +242,7 @@ app.get("/admin/menu", function (req, res) {
                     res.render("login/login", {
                         page: "accountLogin",
                         error: "",
-                        message:""
+                        message: ""
                     });
                 }
             } else {
@@ -251,7 +256,7 @@ app.get("/admin/menu", function (req, res) {
         res.render("login/login", {
             page: "accountLogin",
             error: "",
-                message:""
+            message: ""
         });
     }
 
@@ -304,35 +309,35 @@ app.get("/admin/categories", function (req, res) {
     }
 });
 
-app.get("/admin/account",function(req,res){
-	res.render("dashboardArea/setting",{
-		id:req.cookies.accountHash
-	})
+app.get("/admin/account", function (req, res) {
+    res.render("dashboardArea/setting", {
+        id: req.cookies.accountHash
+    })
 });
-app.post("/admin/postEditor",function(req,res){
-    Account.findById(req.cookies.accountHash,function(err,result){
-        if(!err){
+app.post("/admin/postEditor", function (req, res) {
+    Account.findById(req.cookies.accountHash, function (err, result) {
+        if (!err) {
             result.Posts.forEach(post => {
-                if(post.id==req.body.id){
-                    res.render("dashboardArea/postEditor",{
-                        post:post.Contents,
-                        category:post.Category,
-                        slug:post.Slug,
-                        title:post.Title,
-                        categories:result.Categories,
-                        pId:post.id
+                if (post.id == req.body.id) {
+                    res.render("dashboardArea/postEditor", {
+                        post: post.Contents,
+                        category: post.Category,
+                        slug: post.Slug,
+                        title: post.Title,
+                        categories: result.Categories,
+                        pId: post.id
                     });
                 }
             });
-            
-        }else{
+
+        } else {
             res.render("login/login", {
                 page: "accountLogin",
                 error: ""
             });
         }
     })
-    
+
 });
 
 //admin Posting Section
@@ -351,7 +356,7 @@ app.post("/login", function (req, res) {
             res.render("login/login", {
                 page: "accountLogin",
                 error: "user",
-                message:""
+                message: ""
             })
         } else {
             //if the passwords match
@@ -369,7 +374,7 @@ app.post("/login", function (req, res) {
                 res.render("login/login", {
                     page: "accountLogin",
                     error: "pass",
-                    message:""
+                    message: ""
                 })
 
             }
@@ -655,26 +660,26 @@ app.post("/delete", function (req, res) {
                 }
                 res.redirect("/admin/categories");
             } else if (req.body.type == "menu") {
-                let candelete=true;
+                let candelete = true;
                 result.Menu.forEach(menuItem => {
                     if (menuItem.id == req.body.id && menuItem.Children.length > 0) {
-                        candelete=false;
+                        candelete = false;
                         res.send("<script>alert('Remove all submenus From This item in order to delete it');window.location.href='admin/menu';</script>");
                     }
                 });
                 for (let menuIndex = 0; menuIndex < result.Menu.length; menuIndex++) {
                     var lattermenuIndex = menuIndex + 1;
                     if (result.Menu[menuIndex].id == req.body.id) {
-                        if(candelete){
+                        if (candelete) {
                             result.Menu.splice(menuIndex, lattermenuIndex);
                             res.redirect("/admin/menu");
-                        }else{
+                        } else {
                             //nothing to do excatly
                         }
                         break;
                     }
                 }
-                
+
             }
             result.save();
 
@@ -688,147 +693,196 @@ app.post("/delete", function (req, res) {
     });
 });
 
-app.post("/editPost",function(req,res){
-    Account.findById(req.cookies.accountHash,function(err,result){
-        if(!err){
-           result.Posts.forEach(post => {
-                if(post.id==req.body.pid){
-                    post.Title=req.body.title,
-                    post.Contents=req.body.content,
-                    post.Slug=req.body.slug,
-                    post.Category=req.body.category
+app.post("/editPost", function (req, res) {
+    Account.findById(req.cookies.accountHash, function (err, result) {
+        if (!err) {
+            result.Posts.forEach(post => {
+                if (post.id == req.body.pid) {
+                    post.Title = req.body.title,
+                        post.Contents = req.body.content,
+                        post.Slug = req.body.slug,
+                        post.Category = req.body.category
                     result.save();
                     res.redirect("/admin/post");
                 }
-           });
-        }else{
+            });
+        } else {
             res.redirect("/admin");
         }
-       
-        
+
+
     });
 });
-app.post("/deleteAccount",function(req,res){
-	Account.findByIdAndDelete(req.cookies.accountHash,{useFindAndModify:false},function(err){
-		if(!err){
-			console.log("An Account was deleted Just now");
-			res.redirect("/admin");
-		}else{
-			res.clearCookie("accountHash");
-			res.send("There was an error processing Your Request Reload Page  to Sign-in Again");
-		}
-	})
+app.post("/deleteAccount", function (req, res) {
+    Account.findByIdAndDelete(req.cookies.accountHash, {
+        useFindAndModify: false
+    }, function (err) {
+        if (!err) {
+            console.log("An Account was deleted Just now");
+            res.redirect("/admin");
+        } else {
+            res.clearCookie("accountHash");
+            res.send("There was an error processing Your Request Reload Page  to Sign-in Again");
+        }
+    })
 });
 
-app.get("/newAccount",function(req,res){
-    let emails=[];
-    let slugs=[];
-    let blognames=[];
-    Account.find({},function(err,result){
+app.get("/newAccount", function (req, res) {
+    let emails = [];
+    let slugs = [];
+    let blognames = [];
+    Account.find({}, function (err, result) {
         result.forEach(ress => {
             emails.push(ress.Email);
             slugs.push(ress.Link);
             blognames.push(ress.Name);
         });
     });
-    res.render("login/new",{
-        page:"login",
-        error:"",
-        message:"",
-        emails:emails,
-        links:slugs,
-        blogs:blognames
+    res.render("login/new", {
+        page: "login",
+        error: "",
+        message: "",
+        emails: emails,
+        links: slugs,
+        blogs: blognames
     })
 });
 
-app.post("/editAcc",function(req,res){
-    
-    let type=req.body.type;
-    let value=req.body.color;
-    if(type=="backgroundcolor"){
-        Account.findByIdAndUpdate(req.cookies.accountHash,{BackroundColor:value},function(err){
-            if(!err){
+app.post("/editAcc", function (req, res) {
+
+    let type = req.body.type;
+    let value = req.body.color;
+    if (type == "backgroundcolor") {
+        Account.findByIdAndUpdate(req.cookies.accountHash, {
+            BackroundColor: value
+        }, function (err) {
+            if (!err) {
                 console.log(value);
                 res.redirect("/admin");
-            }else{
+            } else {
                 res.send("Database Error");
             }
         })
     }
-    if(type=="pagecolor"){
-        Account.findByIdAndUpdate(req.cookies.accountHash,{PageLinkTextColor:value},function(err){
-            if(!err){
+    if (type == "pagecolor") {
+        Account.findByIdAndUpdate(req.cookies.accountHash, {
+            PageLinkTextColor: value
+        }, function (err) {
+            if (!err) {
                 console.log(value);
                 res.redirect("/admin");
-            }else{
+            } else {
                 res.send("Database Error");
             }
         })
     }
-    if(type=="lcolor"){
-        Account.findByIdAndUpdate(req.cookies.accountHash,{GeneralLinkColor:value},function(err){
-            if(!err){
+    if (type == "lcolor") {
+        Account.findByIdAndUpdate(req.cookies.accountHash, {
+            GeneralLinkColor: value
+        }, function (err) {
+            if (!err) {
                 console.log(value);
                 res.redirect("/admin");
-            }else{
+            } else {
                 res.send("Database Error");
             }
         })
     }
-    if(type=="catlink"){
-        Account.findByIdAndUpdate(req.cookies.accountHash,{CategoryHeaderColor:value},function(err){
-            if(!err){
+    if (type == "catlink") {
+        Account.findByIdAndUpdate(req.cookies.accountHash, {
+            CategoryHeaderColor: value
+        }, function (err) {
+            if (!err) {
                 console.log(value);
                 res.redirect("/admin");
-            }else{
+            } else {
                 res.send("Database Error");
             }
         })
     }
-    if(type=="caption"){
-        Account.findByIdAndUpdate(req.cookies.accountHash,{HomePageCaption:value},function(err){
-            if(!err){
+    if (type == "caption") {
+        Account.findByIdAndUpdate(req.cookies.accountHash, {
+            HomePageCaption: value
+        }, function (err) {
+            if (!err) {
                 console.log(value);
                 res.redirect("/admin");
-            }else{
+            } else {
                 res.send("Database Error");
             }
         })
     }
 });
 
-app.post("/newAcc",function(req,res){
-    let newAcc={
-        Name:req.body.sitename,
-        Email:req.body.email,
-        Password:req.body.password,
-        Link:req.body.slug,
-        Template:"Elegance",
-        ThemeColor:"hot-pink",
-        BackroundColor:"white",
-        PageLinkTextColor:"#0000cc",
-        CategoryHeaderColor:"blue",
-        HomePageCaption:req.body.sitename,
-        GeneralLinkColor:"black"
+app.post("/newAcc", function (req, res) {
+    let newAcc = {
+        Name: req.body.sitename,
+        Email: req.body.email,
+        Password: req.body.password,
+        Link: req.body.slug,
+        Template: "Elegance",
+        ThemeColor: "hot-pink",
+        BackroundColor: "white",
+        PageLinkTextColor: "#0000cc",
+        CategoryHeaderColor: "blue",
+        HomePageCaption: req.body.sitename,
+        GeneralLinkColor: "black",
+        Media: [{
+            Name: "DefaultIcon.png",
+            Type: "image/png"
+        }]
+
     }
-    Account.insertMany(newAcc,function(err){
-        if(!err){
-            var a=setTimeout(() => {
-                Account.findOne({Name:req.body.sitename},function(err,result){
-                    res.cookie("accountHash",result.id,{
-                        maxAge:1000*60*60*12,
-                        signed:false,
-                        path:"/"
-                    })
+    Account.insertMany(newAcc, function (err) {
+        if (!err) {
+            
+           
+            var a = setTimeout(() => {
+                Account.findOne({
+                    Name: req.body.sitename
+                }, function (err, result) {
+                    res.cookie("accountHash", result.id, {
+                        maxAge: 1000 * 60 * 60 * 12,
+                        signed: false,
+                        path: "/"
+                    });
+                    fs.exists(__dirname + "/media/"+ req.cookies.accountHash, function (exists) {
+                        if (!exists) {
+                            fs.mkdir(__dirname + "/media/"+ req.cookies.accountHash, function (err) {
+                                if (!err) {
+                                    console.log("File created Successfully");
+                                }
+                                fs.copyFile("default.jpg", __dirname + "/media/"+req.cookies.accountHash+"/default_234_qwerty.jpg", function () {
+                                    console.log("file Copies Successfully");
+                                });
+                            });
+                        }
+                    });
                     res.redirect("/admin");
                 });
             }, 1000);
-        }else{
+        } else {
             res.send("There was a database error try again");
         }
     })
 });
 //client Section
+app.get("/postimages/:source/:image", function (req, res) {
+    Account.findOne({Name:req.params.source},function(err,result){
+        if(!err){
+            fs.exists(__dirname+"/media/"+result.id+"/"+req.params.image,function(exist){
+                if(!exist){
+                    res.sendFile(__dirname+"/default.jpg");
+                }else{
+                    res.sendFile(__dirname+"/media/"+result.id+"/"+req.params.image);
+                }
+            });
+        }else{
+            res.send("THERE WAS AN ERROR PROCESSING THE REQUESTS");
+        }
+    });
+    
+});
 
 app.get("/:page", function (req, res) {
     let bloglink = req.params.page;
@@ -850,7 +904,7 @@ app.get("/:page", function (req, res) {
                         title: result.Name,
                         userEmail: result.Email,
                         posts: result.Posts,
-                        categories:result.Categories,
+                        categories: result.Categories,
                         page: "home",
                         Title: result.Name,
                         Parent: result.Link,
@@ -859,9 +913,9 @@ app.get("/:page", function (req, res) {
                         menu: result.Menu,
                         bgc: result.BackroundColor,
                         pl: result.PageLinkTextColor,
-                        cl:result.CategoryHeaderColor,
-                        cp:result.HomePageCaption,
-                        gl:result.GeneralLinkColor
+                        cl: result.CategoryHeaderColor,
+                        cp: result.HomePageCaption,
+                        gl: result.GeneralLinkColor,
                     });
                     console.log("Good day")
                 } else {
