@@ -6,7 +6,9 @@ const mongoose = require("mongoose");
 const bodyparser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
+const fileUpload = require("express-fileupload");
 app.use(cookieParser());
+app.use(fileUpload());
 const port = process.env.PORT || 3000;
 app.listen(port, function () {
     console.log("Server Running Successfully on Port " + port);
@@ -865,6 +867,22 @@ app.post("/newAcc", function (req, res) {
             res.send("There was a database error try again");
         }
     })
+});
+
+app.post("/uploadPostImage",function(req,res){
+    if(req.files.file.mimetype!="image/jpeg"){
+        res.send("Only JPEGs are allowed");
+    }else{
+        res.send("Successful");
+    }
+    
+    req.files.file.mv(uploadPath, function(err) {
+        if (err) {
+          return res.status(500).send(err);
+        }
+    
+        res.send('File uploaded to ' + uploadPath);
+      });
 });
 //client Section
 app.get("/postimages/:source/:image", function (req, res) {
