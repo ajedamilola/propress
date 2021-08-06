@@ -156,7 +156,7 @@
                    <div class="col-5">Background Color :</div>
                    <div class="col-7">
                        <form action="/editAcc" method="post">
-                        <input type="color" name="color" id="">
+                        <input type="color" name="color" id="" value="<%= bgc %>">
                         <input type="hidden" name="type" value="backgroundcolor">
                         <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
                         </form>
@@ -167,7 +167,7 @@
                     <div class="col-5">Page Link Color :</div>
                     <div class="col-7">
                         <form action="/editAcc" method="post">
-                         <input type="color" name="color" id="">
+                         <input type="color" name="color" id="" value="<%= pl %>">
                          <input type="hidden" name="type" value="pagecolor">
                          <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
                          </form>
@@ -178,7 +178,7 @@
                     <div class="col-5">Default Link Color :</div>
                     <div class="col-7">
                         <form action="/editAcc" method="post">
-                         <input type="color" name="color" id="">
+                         <input type="color" name="color" id="" value="<%= gl %>">
                          <input type="hidden" name="type" value="lcolor">
                          <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
                          </form>
@@ -189,8 +189,8 @@
                     <div class="col-5">Category Link Colour :</div>
                     <div class="col-7">
                         <form action="/editAcc" method="post">
-                         <input type="color" name="color" id="">
-                         <input type="hidden" name="type" value="catcolor">
+                         <input type="color" name="color" id="" value="<%= cl %>">
+                         <input type="hidden" name="type" value="catlink">
                          <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
                          </form>
                      </div>
@@ -200,7 +200,7 @@
                     <div class="col-5">Home Page Caption :</div>
                     <div class="col-7">
                         <form action="/editAcc" method="post">
-                         <input type="text" name="color" id="" class="form-control-sm form-control">
+                         <input type="text" name="color" id="" class="form-control-sm form-control" value="<%= cp %>">
                          <input type="hidden" name="type" value="caption">
                          <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
                          </form>

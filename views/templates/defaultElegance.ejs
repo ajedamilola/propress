@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <% var pageLinkColor="green"; %> 
-    <% var backgroundColor="white"; %> 
+    
 
 <head>
     <meta charset="UTF-8">
@@ -17,11 +16,11 @@
             background-image: linear-gradient(65deg, <%=theme %> 50%, rgb(236, 236, 236) 50%);
         }
         .nav-link{
-            color: <%= shade%> !important;
+            color: <%= shade %> !important;
         }
 
         body{
-            background-color: <%= backgroundColor %>;
+            background-color: <%= bgc %>;
         }
         
 
@@ -91,7 +90,7 @@
         }
 
         article[tag="multile-articles"] a {
-            color : <%= pageLinkColor %> !important;
+            color : <%= pl %> !important;
 
         }
 
@@ -154,7 +153,7 @@
             <li class="navbar-item">
                 <a href="/<%= Parent %>" class="nav-link">Home</a>
             </li>
-            <% var webpage="https://propress.herokuapp.com" %>
+            <% var webpage="http://localhost:3000/" %>
             <% menu.forEach(item => { %>
             <% if (item.isChild==false) { %>
             <% let isDropDown=false; %>
@@ -175,7 +174,7 @@
                         <div class="dropdown-item"><a class="dropdown-link" href="<%= subi.Link %>">
                                 <%= sub %> </a> </div>
                         <% }else{ %>
-                        <div class="dropdown-item"><a class="dropdown-link" href="<%= webpage %>/<%= subi.Link %>">
+                        <div class="dropdown-item"><a class="dropdown-link" href="/<%= subi.Link %>">
                                 <%= sub %> </a> </div>
                         <% } } %>
                     <% }) %>
@@ -194,7 +193,7 @@
                     <% menu.forEach(subi => { %>
                     <% if (subi.Text==sub) { %>
                         <% if (subi.Type!="Static Link") { %>
-                            <div class="dropdown-item"><a class="dropdown-link" href="<%= webpage %>/<%= subi.Link %>">
+                            <div class="dropdown-item"><a class="dropdown-link" href="/<%= subi.Link %>">
                                 <%= subi.Text %> </a> </div>
                         <% }else{ %>
                     <div class="dropdown-item"><a class="dropdown-link" href="<%= subi.Link %>">
@@ -229,7 +228,7 @@
     <% if (page=="home") { %>
     <title><%= Title %> </title>
     <h3 class="display-4 jumbotron text-center">
-        Blog Articles
+        <%= cp %> 
     </h3>
     <div class="page-contents container">
         <br>
@@ -271,7 +270,7 @@
     <!--For Viewing Of multiple Categories-->
     <% categories.forEach(category => { %>
     <div class="multiple-categories">
-        <h2 class="display-3 text-center blog-header-sm"><%= category.Name %> </h2>
+        <h2 class="display-3 text-center blog-header-sm" style="color: <%= cl %> !important"><%= category.Name %> </h2>
         <div class="container">
             <div class="row">
                 <% var index=0 %> 
@@ -279,8 +278,8 @@
                 <% if (post.Category==category.Name) { %>
                     <% index++ %> 
                 <div class="col col-6 col-md-6 col-sm-12 border-right" style="margin-top: 50px !important;">
-                    <a href="<%= webpage %>/<%= Parent %>/<%= post.Slug %>">
-                        <h2 class="post-title display-3"><%= post.Title %></h2>
+                    <a href="/<%= Parent %>/<%= post.Slug %>">
+                        <h2 class="post-title display-3 " style="color : <%= pl %> !important"><%= post.Title %></h2>
                     </a>
                     <br>
                     <div class="" style="margin-left: 50px !important;">
@@ -288,7 +287,7 @@
                             <%= post.Contents.slice(0,100) %>
                         </span>
                         <br>
-                        <a href="<%= webpage %>/<%= Parent %>/<%= post.Slug %>">See all</a>
+                        <a href="/<%= Parent %>/<%= post.Slug %>">See all</a>
                     </div>
                 </div>
                 <% } %>
@@ -327,7 +326,7 @@
 
             <% categories.forEach(category => { %>
             <% if (category.Name==post.Category) { %>
-            <a href="<%= webpage %>/<%= Parent %>/categories/<%= category.Slug %>">See more Post under this category</a>
+            <a href="/<%= Parent %>/categories/<%= category.Slug %>">See more Post under this category</a>
             <% } %>
             <% }) %>
         </div>

@@ -97,7 +97,13 @@ app.get("/accountLogin", function (req, res) {
 });
 
 app.get("/admin", function (req, res) {
-
+    // ThemeSettings:{
+    //     BackroundColor:String,
+    //     PageLinkTextColor:String,
+    //     CategoryHeaderColor:String,
+    //     HomePageCaption:String,
+    //     GeneralLinkColor:String
+    // }
     let accountId = req.cookies.accountHash;
     //if a cookie with the encrypted user id exists
     if (accountId != null) {
@@ -114,6 +120,11 @@ app.get("/admin", function (req, res) {
                         shade: result.TextShade,
                         userEmail: result.Email,
                         template: result.Template,
+                        bgc: result.BackroundColor,
+                        pl: result.PageLinkTextColor,
+                        cl:result.CategoryHeaderColor,
+                        cp:result.HomePageCaption,
+                        gl:result.GeneralLinkColor
                     });
                 } else {
                     //if no user with such id
@@ -845,7 +856,12 @@ app.get("/:page", function (req, res) {
                         Parent: result.Link,
                         theme: result.ThemeColor,
                         shade: result.TextShade,
-                        menu: result.Menu
+                        menu: result.Menu,
+                        bgc: result.BackroundColor,
+                        pl: result.PageLinkTextColor,
+                        cl:result.CategoryHeaderColor,
+                        cp:result.HomePageCaption,
+                        gl:result.GeneralLinkColor
                     });
                     console.log("Good day")
                 } else {
@@ -896,7 +912,12 @@ app.get("/:page/categories/:post", function (req, res) {
                             Title: result.Name,
                             theme: result.ThemeColor,
                             shade: result.TextShade,
-                            menu: result.Menu
+                            menu: result.Menu,
+                            bgc: result.BackroundColor,
+                            pl: result.PageLinkTextColor,
+                            cl: result.CategoryHeaderColor,
+                            cp: result.HomePageCaption,
+                            gl: result.GeneralLinkColor
                         });
                     } else {
                         res.render("templates/" + templateResult.File, {
@@ -908,7 +929,12 @@ app.get("/:page/categories/:post", function (req, res) {
                             Title: result.Name,
                             theme: result.ThemeColor,
                             shade: result.TextShade,
-                            menu: result.Menu
+                            menu: result.Menu,
+                            bgc: result.BackroundColor,
+                            pl: result.PageLinkTextColor,
+                            cl: result.CategoryHeaderColor,
+                            cp: result.HomePageCaption,
+                            gl: result.GeneralLinkColor
                         });
                     }
 
@@ -962,7 +988,12 @@ app.get("/:page/:post", function (req, res) {
                             theme: result.ThemeColor,
                             shade: result.TextShade,
                             menu: result.Menu,
-                            categories: result.Categories
+                            categories: result.Categories,
+                            bgc: result.BackroundColor,
+                            pl: result.PageLinkTextColor,
+                            cl: result.CategoryHeaderColor,
+                            cp: result.HomePageCaption,
+                            gl: result.GeneralLinkColor
                         });
                     } else {
                         res.render("templates/" + templateResult.File, {
@@ -974,7 +1005,12 @@ app.get("/:page/:post", function (req, res) {
                             Title: result.Name,
                             theme: result.ThemeColor,
                             shade: result.TextShade,
-                            menu: result.Menu
+                            menu: result.Menu,
+                            bgc: result.BackroundColor,
+                            pl: result.PageLinkTextColor,
+                            cl: result.CategoryHeaderColor,
+                            cp: result.HomePageCaption,
+                            gl: result.GeneralLinkColor
                         });
                     }
 
