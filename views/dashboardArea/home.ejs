@@ -148,7 +148,65 @@
                     <div class="col-6">
                         image here
                     </div>
-                </div> 
+                </div>
+            </div> 
+            <h4 class="display-3 sub-heading">Settings:<br>
+            <div class="site-settings">
+                <div class="row" style="margin-top: 30px !important;">
+                   <div class="col-5">Background Color :</div>
+                   <div class="col-7">
+                       <form action="/editAcc" method="post">
+                        <input type="color" name="color" id="">
+                        <input type="hidden" name="type" value="backgroundcolor">
+                        <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 30px !important;">
+                    <div class="col-5">Page Link Color :</div>
+                    <div class="col-7">
+                        <form action="/editAcc" method="post">
+                         <input type="color" name="color" id="">
+                         <input type="hidden" name="type" value="pagecolor">
+                         <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
+                         </form>
+                     </div>
+                 </div>
+
+                 <div class="row" style="margin-top: 30px !important;">
+                    <div class="col-5">Default Link Color :</div>
+                    <div class="col-7">
+                        <form action="/editAcc" method="post">
+                         <input type="color" name="color" id="">
+                         <input type="hidden" name="type" value="lcolor">
+                         <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
+                         </form>
+                     </div>
+                 </div>
+
+                 <div class="row" style="margin-top: 30px !important;">
+                    <div class="col-5">Category Link Colour :</div>
+                    <div class="col-7">
+                        <form action="/editAcc" method="post">
+                         <input type="color" name="color" id="">
+                         <input type="hidden" name="type" value="catcolor">
+                         <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
+                         </form>
+                     </div>
+                 </div>
+
+                 <div class="row" style="margin-top: 30px !important;">
+                    <div class="col-5">Home Page Caption :</div>
+                    <div class="col-7">
+                        <form action="/editAcc" method="post">
+                         <input type="text" name="color" id="" class="form-control-sm form-control">
+                         <input type="hidden" name="type" value="caption">
+                         <button type="submit" class="btn btn-outline-info btn-sm">Change</button>
+                         </form>
+                     </div>
+                 </div>
+
                 <div class="row " style="margin-top: 30px !important;">
                     <div class="col-12">
                         <button class="btn btn-outline-dark">More Template Layouts</button>
@@ -157,5 +215,4 @@
                   
             </div>
     </div>
-    
 <%- include ("footer"); %> 

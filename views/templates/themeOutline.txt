@@ -1,0 +1,11 @@
+title: result.Name,
+userEmail: result.Email,
+posts: result.Posts,
+categories: result.Categories,
+page: "home",
+Title: result.Name,
+Parent: result.Link,
+theme: result.ThemeColor,
+shade: result.TextShade,
+menu: result.Menu,
+templateSettings: result.CustomSettings

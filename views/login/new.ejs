@@ -1,0 +1,106 @@
+<%- include ("header"); %> 
+    <div class="main-content container min-vw-100">
+        <h1 class="display-4">
+            New Blog/Site Account
+        </h1>
+        
+        <form action="/newAcc" method="post" id="sign-up">
+            <br>
+            <div class="row">
+                <div class="col-md-7 col-sm-12">
+                    <input type="email" name="email" id="email" class="form-control  field" placeholder="Input Your Email Address" required> 
+                    <div style="color:red" id="emailt"></div>
+                </div>
+                <div class="col-md-5 col-sm-12"> 
+                    <input type="text" name="sitename" id="sitename" class="form-control  field" placeholder="Choose A Site Name" required>
+                    <span style="color:red" id="blogt"></span>
+                </div>
+                <div class="col-md-6 col-sm-12"><input type="password" name="password" id="p1" class="form-control ml-up field" placeholder="Input Password" required></div>
+                <div class="col-md-6 col-sm-12"><input type="password" name="p" id="p2" class="form-control ml-up field" placeholder="Confirm Password" required></div>
+                <div class="col-12" style="text-align: left !important;font-size: small;">
+                    <span style="color:red" class="text-sm">Passwords Must Match</span><br>
+                    <span style="color:red" class="text-sm">At least eight characters</span>
+                </div>
+                <div class="col-12"><input type="text" name="slug" id="linkname" class="field form-control" placeholder="choose a url friendly slug e.g coffee-blog" required></div>
+            </div>
+            
+            <input type="checkbox" name="check" id="check_login" required class="ml-up"><label for="check_logn">
+                By clicking This Checkbox you Agree to Our Liscence agreement
+            </label>
+            <br>
+            <button type="submit" class="btn btn-outline-main ml-up" id="sub">LOGIN</button>
+        </form>
+    </div>
+    <script>
+        let usernameExist=true;
+        let emailExist=true;
+        let blogExist=true;
+        var d=setInterval(function(){
+            var p=document.getElementById("p1").value;
+            var q=document.getElementById("p2").value;
+            if(p!=q || p.length<8 || usernameExist || emailExist || blogExist){
+                document.getElementById("sub").disabled=true;
+            }else{
+                document.getElementById("sub").disabled=false;
+            }
+
+            if(p==q && p.length>0){
+                document.getElementsByClassName("text-sm")[0].style.color="#00ff00";
+            }
+            if(p!=q){
+                document.getElementsByClassName("text-sm")[0].style.color="#ff0000";
+            }
+            if(p.length>=8){
+                document.getElementsByClassName("text-sm")[1].style.color="#00ff00";
+            }
+            if(p.length<8){
+                document.getElementsByClassName("text-sm")[1].style.color="#ff0000";
+            }
+
+            //cheking used usernames
+            let emails = ["<%= emails %>"];
+            emails.forEach(email => {
+                if(document.getElementById("email").value==email){
+                    document.getElementById("email").style.color="red";
+                    document.getElementById("email").style.border="1px solid red";
+                    emailExist=true;
+                    document.getElementById("emailt").innerHTML="This Username Has Already Been Taken";
+                }   else{
+                    emailExist=false;
+                    document.getElementById("email").style.color="#666666";
+                    document.getElementById("email").style.border="1px solid #bbbbbb";
+                    document.getElementById("emailt").innerHTML="";
+                }  
+            });
+            //checking used blognames
+            let blogs=["<%= blogs %>"];
+            blogs.forEach(function(blog){
+                if(document.getElementById("sitename").value==blog){
+                    document.getElementById("sitename").style.color="red";
+                    document.getElementById("sitename").style.border="1px solid red";
+                    document.getElementById("blogt").innerHTML="There is an Account With THis Name";
+                    usernameExist=true;
+                }else{
+                    usernameExist=false;
+                    document.getElementById("sitename").style.color="#666666";
+                    document.getElementById("sitename").style.border="1px solid #bbbbbb";
+                    document.getElementById("blogt").innerHTML="";
+                }  
+            });
+            //cheking for slugname
+            let slugs=["<%= links %>"];
+            slugs.forEach(function(slug){
+                if(document.getElementById("linkname").value==slug || document.getElementById("linkname").value.length<3){
+                    document.getElementById("linkname").style.color="red";
+                    document.getElementById("linkname").style.border="1px solid red";
+                    blogExist=true;
+                }else{
+                    blogExist=false;
+                    document.getElementById("linkname").style.color="#666666";
+                    document.getElementById("linkname").style.border="1px solid #bbbbbb";
+                }  
+            });
+            
+        },200)
+    </script>
+<%- include ("footer"); %> 

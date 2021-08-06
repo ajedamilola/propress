@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <nav style="border: 1px solid green;">
+        This is a default nabar
+        <p>
+            <% menu.forEach(mainItem => { %>
+                <% if (mainItem.isChild==false) { %>
+                    <div style="display: inline;">
+                        <span><%= mainItem.Text %> </span>&nbsp;
+                       <% mainItem.Children.forEach(child => { %>
+                            <% menu.forEach(cchild => { %>
+                                <% if (cchild.Text==child) { %>
+                                    <p style="margin-left: 10px !important;"><%= child %> </p>
+                                <% } %>
+                            <% }) %>
+                       <% }) %>
+                        
+                    </div> 
+                <% } %>
+            <% }) %>
+        </p>
+    </nav>
+    <div  style="border: 1px solid blue;">
+        <h1>This is a default Post Section</h1>
+        <% if (page=="home") { %>
+            <% posts.forEach(post => { %>
+                <div>
+                    <h2><%= post.Title %> </h2>
+                    <p><%= post.Contents %> </p>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
+    
+    
+</body>
+</html>

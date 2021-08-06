@@ -14,7 +14,6 @@
 .main-content{
     padding-top: 8%;
     text-align: center;
-    min-height: 800px;
     min-width: 100% !important;
 }
 body.gradient-faded .main-content{
@@ -47,6 +46,10 @@ body.gradient-faded .main-content{
 .field{
     font-size: 19px !important;
     padding-left: 20px !important;
+}
+
+#sign-up{
+    margin: 1% 10% !important;
 }
 @media (max-width:900px){
     #login{

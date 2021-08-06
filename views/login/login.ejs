@@ -11,6 +11,12 @@
             Wrong Password
         </div>
         <% } %> 
+        <% if (message.length>0) { %>
+            <div class="alert alert-faded alert-success" style="text-align: center;">
+                Account Created Successfully
+                <%= message %> 
+            </div>
+        <% } %>
         <form action="/login" method="post" id="login">
             <span class="display-4" style="float: left !important;margin-bottom: 50px !important;">
                 Account Login

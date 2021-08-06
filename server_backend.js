@@ -16,7 +16,7 @@ app.use(bodyparser.urlencoded({
 app.set("view engine", "ejs");
 const mongodbOnlineUrl = "mongodb://damilola:connect@blogdb-shard-00-00.ahxoi.mongodb.net:27017,blogdb-shard-00-01.ahxoi.mongodb.net:27017,blogdb-shard-00-02.ahxoi.mongodb.net:27017/AccountsData?ssl=true&replicaSet=atlas-111cjk-shard-0&authSource=admin&retryWrites=true&w=majority";
 const offlineUrl = "mongodb://localhost:27017/propress";
-mongoose.connect(mongodbOnlineUrl, {
+mongoose.connect(offlineUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -51,7 +51,13 @@ const accountsSchema = {
     TextShade: String,
     Posts: [postSchema],
     Categories: [categorySchema],
-    Menu: [menuSchema]
+    Menu: [menuSchema],
+    BackroundColor: String,
+    PageLinkTextColor: String,
+    CategoryHeaderColor: String,
+    HomePageCaption: String,
+    GeneralLinkColor: String
+    
 }
 
 const Account = mongoose.model("account", accountsSchema)
@@ -84,7 +90,8 @@ app.get("/cssjs/clientStyle.css", function (req, res) {
 //admin get requests
 app.get("/accountLogin", function (req, res) {
     res.render("login/login", {
-        page: "accountLogin"
+        page: "accountLogin",
+		message:""
     });
 
 });
@@ -106,13 +113,14 @@ app.get("/admin", function (req, res) {
                         theme: result.ThemeColor,
                         shade: result.TextShade,
                         userEmail: result.Email,
-                        template: result.Template
+                        template: result.Template,
                     });
                 } else {
                     //if no user with such id
                     res.render("login/login", {
                         page: "accountLogin",
-                        error: ""
+                        error: "",
+                        message:""
                     });
                 }
             } else {
@@ -125,7 +133,8 @@ app.get("/admin", function (req, res) {
         //if no cookie at all
         res.render("login/login", {
             page: "accountLogin",
-            error: ""
+            error: "",
+            message:""
         });
     }
 
@@ -162,7 +171,8 @@ app.get("/admin/post", function (req, res) {
                     //if no user with such id
                     res.render("login/login", {
                         page: "accountLogin",
-                        error: ""
+                        error: "",
+                        message:""
                     });
                 }
             } else {
@@ -175,7 +185,8 @@ app.get("/admin/post", function (req, res) {
         //if no cookie at all
         res.render("login/login", {
             page: "accountLogin",
-            error: ""
+            error: "",
+            message:""
         });
     }
 
@@ -214,7 +225,8 @@ app.get("/admin/menu", function (req, res) {
                     //if no user with such id
                     res.render("login/login", {
                         page: "accountLogin",
-                        error: ""
+                        error: "",
+                        message:""
                     });
                 }
             } else {
@@ -227,7 +239,8 @@ app.get("/admin/menu", function (req, res) {
         //if no cookie at all
         res.render("login/login", {
             page: "accountLogin",
-            error: ""
+            error: "",
+                message:""
         });
     }
 
@@ -280,6 +293,11 @@ app.get("/admin/categories", function (req, res) {
     }
 });
 
+app.get("/admin/account",function(req,res){
+	res.render("dashboardArea/setting",{
+		id:req.cookies.accountHash
+	})
+});
 app.post("/admin/postEditor",function(req,res){
     Account.findById(req.cookies.accountHash,function(err,result){
         if(!err){
@@ -321,7 +339,8 @@ app.post("/login", function (req, res) {
             //if no user exists with the inputed name
             res.render("login/login", {
                 page: "accountLogin",
-                error: "user"
+                error: "user",
+                message:""
             })
         } else {
             //if the passwords match
@@ -338,7 +357,8 @@ app.post("/login", function (req, res) {
                 //there is a user but passwords dosenot match
                 res.render("login/login", {
                     page: "accountLogin",
-                    error: "pass"
+                    error: "pass",
+                    message:""
                 })
 
             }
@@ -677,7 +697,126 @@ app.post("/editPost",function(req,res){
         
     });
 });
+app.post("/deleteAccount",function(req,res){
+	Account.findByIdAndDelete(req.cookies.accountHash,{useFindAndModify:false},function(err){
+		if(!err){
+			console.log("An Account was deleted Just now");
+			res.redirect("/admin");
+		}else{
+			res.clearCookie("accountHash");
+			res.send("There was an error processing Your Request Reload Page  to Sign-in Again");
+		}
+	})
+});
 
+app.get("/newAccount",function(req,res){
+    let emails=[];
+    let slugs=[];
+    let blognames=[];
+    Account.find({},function(err,result){
+        result.forEach(ress => {
+            emails.push(ress.Email);
+            slugs.push(ress.Link);
+            blognames.push(ress.Name);
+        });
+    });
+    res.render("login/new",{
+        page:"login",
+        error:"",
+        message:"",
+        emails:emails,
+        links:slugs,
+        blogs:blognames
+    })
+});
+
+app.post("/editAcc",function(req,res){
+    
+    let type=req.body.type;
+    let value=req.body.color;
+    if(type=="backgroundcolor"){
+        Account.findByIdAndUpdate(req.cookies.accountHash,{BackroundColor:value},function(err){
+            if(!err){
+                console.log(value);
+                res.redirect("/admin");
+            }else{
+                res.send("Database Error");
+            }
+        })
+    }
+    if(type=="pagecolor"){
+        Account.findByIdAndUpdate(req.cookies.accountHash,{PageLinkTextColor:value},function(err){
+            if(!err){
+                console.log(value);
+                res.redirect("/admin");
+            }else{
+                res.send("Database Error");
+            }
+        })
+    }
+    if(type=="lcolor"){
+        Account.findByIdAndUpdate(req.cookies.accountHash,{GeneralLinkColor:value},function(err){
+            if(!err){
+                console.log(value);
+                res.redirect("/admin");
+            }else{
+                res.send("Database Error");
+            }
+        })
+    }
+    if(type=="catlink"){
+        Account.findByIdAndUpdate(req.cookies.accountHash,{CategoryHeaderColor:value},function(err){
+            if(!err){
+                console.log(value);
+                res.redirect("/admin");
+            }else{
+                res.send("Database Error");
+            }
+        })
+    }
+    if(type=="caption"){
+        Account.findByIdAndUpdate(req.cookies.accountHash,{HomePageCaption:value},function(err){
+            if(!err){
+                console.log(value);
+                res.redirect("/admin");
+            }else{
+                res.send("Database Error");
+            }
+        })
+    }
+});
+
+app.post("/newAcc",function(req,res){
+    let newAcc={
+        Name:req.body.sitename,
+        Email:req.body.email,
+        Password:req.body.password,
+        Link:req.body.slug,
+        Template:"Elegance",
+        ThemeColor:"hot-pink",
+        BackroundColor:"white",
+        PageLinkTextColor:"#0000cc",
+        CategoryHeaderColor:"blue",
+        HomePageCaption:req.body.sitename,
+        GeneralLinkColor:"black"
+    }
+    Account.insertMany(newAcc,function(err){
+        if(!err){
+            var a=setTimeout(() => {
+                Account.findOne({Name:req.body.sitename},function(err,result){
+                    res.cookie("accountHash",result.id,{
+                        maxAge:1000*60*60*12,
+                        signed:false,
+                        path:"/"
+                    })
+                    res.redirect("/admin");
+                });
+            }, 1000);
+        }else{
+            res.send("There was a database error try again");
+        }
+    })
+});
 //client Section
 
 app.get("/:page", function (req, res) {
@@ -855,27 +994,3 @@ app.get("/:page/:post", function (req, res) {
         }
     });
 });
-
-
-
-
-//  Account.insertMany({
-//      Name: "DefaultAccount",
-//      Password: "damilola",
-//      Email: "ajedamilola2005@gmail.com",
-//      AccountType: "Demo",
-//      Link: "default",
-//      ThemeColor: "green",
-//      Template: "Elegance",
-//      TextShade: "Dark",
-//  },function(err){
-//  });
-
-// Theme.insertMany({
-//         Name: "Elegance",
-//         File: "defaultELegance",
-//         Sidebar: "false",
-//         Left: "false",
-//         Right:"false"  
-// },function(err){
-// });

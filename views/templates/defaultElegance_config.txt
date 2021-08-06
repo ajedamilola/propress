@@ -1,0 +1,3 @@
+TempleCustom Settings are:
+	Page Link Color
+	Background Color
