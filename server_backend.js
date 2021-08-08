@@ -19,7 +19,7 @@ app.use(bodyparser.urlencoded({
 app.set("view engine", "ejs");
 const mongodbOnlineUrl = "mongodb://damilola:connect@blogdb-shard-00-00.ahxoi.mongodb.net:27017,blogdb-shard-00-01.ahxoi.mongodb.net:27017,blogdb-shard-00-02.ahxoi.mongodb.net:27017/AccountsData?ssl=true&replicaSet=atlas-111cjk-shard-0&authSource=admin&retryWrites=true&w=majority";
 const offlineUrl = "mongodb://localhost:27017/propress";
-mongoose.connect(mongodbOnlineUrl, {
+mongoose.connect(offlineUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -176,11 +176,13 @@ app.get("/admin/post", function (req, res) {
                     Account.findById(accountId, function (err, results) {
                         if (!err) {
                             res.render("dashboardArea/posts", {
+                                pid:results.id,
                                 posts: results.Posts,
                                 categories: result.Categories
                             });
                         } else {
                             res.render("dashboardArea/posts", {
+                                pid:results.id,
                                 posts: "There Was a database error while getting your posts",
                                 categories: "Database Error"
                             });
@@ -737,21 +739,22 @@ app.get("/newAccount", function (req, res) {
     let emails = [];
     let slugs = [];
     let blognames = [];
-    Account.find({}, function (err, result) {
-        result.forEach(ress => {
+    Account.find({}, function (err, resssult) {
+        resssult.forEach(ress => {
             emails.push(ress.Email);
             slugs.push(ress.Link);
             blognames.push(ress.Name);
         });
+        res.render("login/new", {
+            page: "login",
+            error: "",
+            message: "",
+            emails: emails,
+            links: slugs,
+            blogs: blognames
+        })
     });
-    res.render("login/new", {
-        page: "login",
-        error: "",
-        message: "",
-        emails: emails,
-        links: slugs,
-        blogs: blognames
-    })
+    
 });
 
 app.post("/editAcc", function (req, res) {
@@ -845,20 +848,20 @@ app.post("/newAcc", function (req, res) {
            
             var a = setTimeout(() => {
                 Account.findOne({
-                    Name: req.body.sitename
+                    Email: req.body.email
                 }, function (err, result) {
                     res.cookie("accountHash", result.id, {
                         maxAge: 1000 * 60 * 60 * 12,
                         signed: false,
                         path: "/"
                     });
-                    fs.exists(__dirname + "/media/"+ req.cookies.accountHash, function (exists) {
+                    fs.exists(__dirname + "/media/"+  result.id, function (exists) {
                         if (!exists) {
-                            fs.mkdir(__dirname + "/media/"+ req.cookies.accountHash, function (err) {
+                            fs.mkdir(__dirname + "/media/"+  result.id, function (err) {
                                 if (!err) {
                                     console.log("File created Successfully");
                                 }
-                                fs.copyFile("default.jpg", __dirname + "/media/"+req.cookies.accountHash+"/default_234_qwerty.jpg", function () {
+                                fs.copyFile("default.jpg", __dirname + "/media/"+ result.id+"/default_234_qwerty.jpg", function () {
                                     console.log("file Copies Successfully");
                                 });
                             });
@@ -874,29 +877,41 @@ app.post("/newAcc", function (req, res) {
 });
 
 app.post("/uploadPostImage",function(req,res){
-    if(req.files.file.mimetype!="image/jpeg"){
-        res.send("Only JPEGs are allowed");
-    }else{
-        res.send("Successful");
+let uploadPath=__dirname+"/media/"+req.cookies.accountHash+"/"+req.body.id+".jpg";
+let sampleFile;
+
+if(req.files.file.mimetype=="image/jpeg"){
+  if (!req.files || Object.keys(req.files).length === 0) {
+    res.status(400).send('No files were uploaded.');
+    return;
+  }
+
+  console.log('req.files >>>', req.files); // eslint-disable-line
+
+  sampleFile = req.files.file;
+
+
+  sampleFile.mv(uploadPath, function(err) {
+    if (err) {
+      return res.status(500).send(err);
     }
+
+    res.send("Upload Successful <a href='/admin/post'>Go Back</a>");
+  });
+}else{
+    res.send("Only JPG/JPEGS Are Allowed <a href='/admin/post'>Go Back</a>");
+}
     
-    req.files.file.mv(__dirname+"/"+req.cookies.accountHash+"/"+req.body.id+".jpg", function(err) {
-        if (err) {
-          return res.status(500).send(err);
-        }
-    
-        res.send('File uploaded to ' + uploadPath);
-      });
 });
 //client Section
 app.get("/postimages/:source/:image", function (req, res) {
     Account.findOne({Name:req.params.source},function(err,result){
         if(!err){
-            fs.exists(__dirname+"/media/"+result.id+"/"+req.params.image,function(exist){
+            fs.exists(__dirname+"/media/"+req.params.source+"/"+req.params.image,function(exist){
                 if(!exist){
                     res.sendFile(__dirname+"/default.jpg");
                 }else{
-                    res.sendFile(__dirname+"/media/"+result.id+"/"+req.params.image);
+                    res.sendFile(__dirname+"/media/"+req.params.source+"/"+req.params.image);
                 }
             });
         }else{
@@ -928,6 +943,7 @@ app.get("/:page", function (req, res) {
                         posts: result.Posts,
                         categories: result.Categories,
                         page: "home",
+                        pid:result.id,
                         Title: result.Name,
                         Parent: result.Link,
                         theme: result.ThemeColor,
@@ -993,7 +1009,8 @@ app.get("/:page/categories/:post", function (req, res) {
                             pl: result.PageLinkTextColor,
                             cl: result.CategoryHeaderColor,
                             cp: result.HomePageCaption,
-                            gl: result.GeneralLinkColor
+                            gl: result.GeneralLinkColor,
+                            pid: result.id
                         });
                     } else {
                         res.render("templates/" + templateResult.File, {
@@ -1010,7 +1027,8 @@ app.get("/:page/categories/:post", function (req, res) {
                             pl: result.PageLinkTextColor,
                             cl: result.CategoryHeaderColor,
                             cp: result.HomePageCaption,
-                            gl: result.GeneralLinkColor
+                            gl: result.GeneralLinkColor,
+                            pid: result.id
                         });
                     }
 
@@ -1069,7 +1087,8 @@ app.get("/:page/:post", function (req, res) {
                             pl: result.PageLinkTextColor,
                             cl: result.CategoryHeaderColor,
                             cp: result.HomePageCaption,
-                            gl: result.GeneralLinkColor
+                            gl: result.GeneralLinkColor,
+                            pid: result.id
                         });
                     } else {
                         res.render("templates/" + templateResult.File, {
@@ -1086,7 +1105,8 @@ app.get("/:page/:post", function (req, res) {
                             pl: result.PageLinkTextColor,
                             cl: result.CategoryHeaderColor,
                             cp: result.HomePageCaption,
-                            gl: result.GeneralLinkColor
+                            gl: result.GeneralLinkColor,
+                            pid:result.id
                         });
                     }
 

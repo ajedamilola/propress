@@ -53,9 +53,11 @@
                                 <button type="submit" class="btn btn-outline-danger btn-sm">Delete Post</button>
                             </form>
                             <form action="/uploadPostImage" method="post" class="border border-success" encType="multipart/form-data">
-                                <input type="hidden" name="id" value="<%= post.Title %>">
+                                <input type="hidden" name="name" value="<%= post.Title %>">
+                                <input type="hidden" name="id" value="<%= post.id %>">
                                 <input type="file" name="file" id="" required>
                                 <button type="submit" class="btn btn-outline-success btn-sm">Set Post Icon</button>
+                                <img src="/postImages/<%= pid %>/<%= post.id %>.jpg" alt="" style="width:100px;height:100px;border-radius: 100%;">
                             </form>
                         </td>
                     </tr>
