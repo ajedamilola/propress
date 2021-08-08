@@ -19,7 +19,7 @@ app.use(bodyparser.urlencoded({
 app.set("view engine", "ejs");
 const mongodbOnlineUrl = "mongodb://damilola:connect@blogdb-shard-00-00.ahxoi.mongodb.net:27017,blogdb-shard-00-01.ahxoi.mongodb.net:27017,blogdb-shard-00-02.ahxoi.mongodb.net:27017/AccountsData?ssl=true&replicaSet=atlas-111cjk-shard-0&authSource=admin&retryWrites=true&w=majority";
 const offlineUrl = "mongodb://localhost:27017/propress";
-mongoose.connect(offlineUrl, {
+mongoose.connect(mongodbOnlineUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
