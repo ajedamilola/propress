@@ -95,6 +95,10 @@ app.get("/cssjs/clientStyle.css", function (req, res) {
 //#endregion
 
 //admin get requests
+
+app.get("/",function(req,res){
+    res.redirect("/admin");
+})
 app.get("/accountLogin", function (req, res) {
     res.render("login/login", {
         page: "accountLogin",
@@ -876,7 +880,7 @@ app.post("/uploadPostImage",function(req,res){
         res.send("Successful");
     }
     
-    req.files.file.mv(uploadPath, function(err) {
+    req.files.file.mv(__dirname+"/"+req.cookies.accountHash+"/"+req.body.id+".jpg", function(err) {
         if (err) {
           return res.status(500).send(err);
         }
