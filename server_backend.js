@@ -102,7 +102,8 @@ app.get("/",function(req,res){
 app.get("/accountLogin", function (req, res) {
     res.render("login/login", {
         page: "accountLogin",
-        message: ""
+        message: "",
+        error:""
     });
 
 });
