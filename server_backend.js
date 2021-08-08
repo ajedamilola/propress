@@ -750,9 +750,7 @@ app.get("/newAccount", function (req, res) {
             page: "login",
             error: "",
             message: "",
-            emails: emails,
-            links: slugs,
-            blogs: blognames
+            
         })
     });
     
@@ -843,38 +841,83 @@ app.post("/newAcc", function (req, res) {
         }]
 
     }
-    Account.insertMany(newAcc, function (err) {
-        if (!err) {
-            
-           
-            var a = setTimeout(() => {
-                Account.findOne({
-                    Email: req.body.email
-                }, function (err, result) {
-                    res.cookie("accountHash", result.id, {
-                        maxAge: 1000 * 60 * 60 * 12,
-                        signed: false,
-                        path: "/"
-                    });
-                    fs.exists(__dirname + "/media/"+  result.id, function (exists) {
-                        if (!exists) {
-                            fs.mkdir(__dirname + "/media/"+  result.id, function (err) {
-                                if (!err) {
-                                    console.log("File created Successfully");
-                                }
-                                fs.copyFile("default.jpg", __dirname + "/media/"+ result.id+"/default_234_qwerty.jpg", function () {
-                                    console.log("file Copies Successfully");
-                                });
-                            });
-                        }
-                    });
-                    res.redirect("/admin");
+
+    Account.find({Name:req.body.sitename},function(err,result){
+        if(result.length!=0){
+            res.render("login/new",{
+                page: "login",
+                error: "Account Exists With This Name",
+                message: "",
+            });
+            return;
+        }else{
+           //pased first query
+
+           Account.find({Email:req.body.email},function(err,resultem){
+            if(resultem.length!=0){
+                res.render("login/new",{
+                    page: "login",
+                    error: "Account Exists With This Email",
+                    message: "",
                 });
-            }, 1000);
-        } else {
-            res.send("There was a database error try again");
-        }
-    })
+                return;
+            }else{
+               //pased Second query
+               Account.find({Link:req.body.slug},function(err,resultem){
+                if(resultem.length!=0){
+                    res.render("login/new",{
+                        page: "login",
+                        error: "Account Exists With This Email",
+                        message: "",
+                    });
+                    return;
+                }else{
+                   //pased third query
+                   Account.insertMany(newAcc, function (err) {
+                    if (!err) {
+                        
+                       
+                        var a = setTimeout(() => {
+                            Account.findOne({
+                                Email: req.body.email
+                            }, function (err, result) {
+                                res.cookie("accountHash", result.id, {
+                                    maxAge: 1000 * 60 * 60 * 12,
+                                    signed: false,
+                                    path: "/"
+                                });
+                                fs.exists(__dirname + "/media/"+  result.id, function (exists) {
+                                    if (!exists) {
+                                        fs.mkdir(__dirname + "/media/"+  result.id, function (err) {
+                                            if (!err) {
+                                                console.log("File created Successfully");
+                                            }
+                                            fs.copyFile("default.jpg", __dirname + "/media/"+ result.id+"/default_234_qwerty.jpg", function () {
+                                                console.log("file Copies Successfully");
+                                            });
+                                        });
+                                    }
+                                });
+                                res.redirect("/admin");
+                            });
+                        }, 1000);
+                    } else {
+                        res.send("There was a database error try again");
+                    }
+                })
+                   
+                }
+    
+            })
+               
+            }
+
+        })
+    }
+
+    });
+
+   
 });
 
 app.post("/uploadPostImage",function(req,res){
